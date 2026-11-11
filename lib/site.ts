@@ -5,6 +5,8 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://centuryfinancialgroup.net",
   description:
     "Century Financial Group, Corp. is a licensed California real estate corporation offering mortgage-readiness guidance and a purpose-led partnership with LIMinistries.",
+  email: "info@centuryfinancialgroup.net",
+  emailHref: "mailto:info@centuryfinancialgroup.net",
   phoneDisplay: "+1 (714) 627-5815",
   phoneHref: "tel:+17146275815",
   address: {

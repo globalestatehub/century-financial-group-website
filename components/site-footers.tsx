@@ -79,11 +79,8 @@ export function PartnershipFooter() {
           <a className="hover:text-rust-light" href="https://liministries.org">
             liministries.org
           </a>
-          <a
-            className="hover:text-rust-light"
-            href="mailto:partners@liministries.org"
-          >
-            partners@liministries.org
+          <a className="hover:text-rust-light" href={siteConfig.emailHref}>
+            {siteConfig.email}
           </a>
         </div>
       </div>

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   },
 };
 
-const contactEmail = "info@centuryfinancialgroup.net";
+const contactEmail = siteConfig.email;
 
 export default function AccessibilityPage() {
   return (

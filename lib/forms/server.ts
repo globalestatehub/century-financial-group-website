@@ -28,8 +28,7 @@ const TURNSTILE_TEST_SECRETS = new Set([
 function formSite() {
   return {
     siteName: process.env.SITE_NAME || "Century Financial Group Net",
-    contactEmail:
-      process.env.SITE_CONTACT_EMAIL || "info@centuryfinancialgroup.net",
+    contactEmail: process.env.SITE_CONTACT_EMAIL || siteConfig.email,
   };
 }
 
