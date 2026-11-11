@@ -1,0 +1,140 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * Century Financial Group design tokens.
+ * Two palettes carried over from the original site:
+ *  - Mortgage (forest green on white) for the header, mortgage readiness, and blog.
+ *  - Covenant Ledger (parchment, ink, slate, rust) for the partnership narrative.
+ */
+@theme inline {
+  --font-sans: var(--font-source-sans), "Source Sans 3", Arial, sans-serif;
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-heading: var(--font-serif);
+
+  /* Mortgage palette */
+  --color-forest: #0e5030;
+  --color-forest-dark: #083c23;
+  --color-forest-deep: #173424;
+  --color-forest-ink: #193525;
+  --color-moss: #40574a;
+  --color-sage: #a7b9ac;
+  --color-mint: #eaf2ec;
+  --color-mint-light: #b9d9c3;
+  --color-line: #d8e2da;
+  --color-mist: #fafcfa;
+  --color-gold: #c9a84c;
+
+  /* Covenant Ledger palette */
+  --color-ink: #1a1a1a;
+  --color-parchment: #f2f0e9;
+  --color-parchment-deep: #e9e6dc;
+  --color-slate-ink: #2e4057;
+  --color-rust: #8c2f00;
+  --color-rust-dark: #6e2500;
+  --color-rust-light: #d9815a;
+
+  /* shadcn semantic tokens */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  /* The original site uses square corners throughout. */
+  --radius: 0rem;
+  --background: #ffffff;
+  --foreground: #1a1a1a;
+  --card: #ffffff;
+  --card-foreground: #1a1a1a;
+  --popover: #ffffff;
+  --popover-foreground: #173424;
+  --primary: #0e5030;
+  --primary-foreground: #ffffff;
+  --secondary: #eaf2ec;
+  --secondary-foreground: #173424;
+  --muted: #f6f8f6;
+  --muted-foreground: #5b6a60;
+  --accent: #eaf2ec;
+  --accent-foreground: #173424;
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: #d8e2da;
+  --input: #a7b9ac;
+  --ring: #0e5030;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+    overflow-x: hidden;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/*
+ * Google Translate: keep the page translator but hide Google's own banner,
+ * tooltip, and the offset it adds to <body>.
+ */
+.goog-te-banner-frame,
+iframe.skiptranslate,
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.VIpgJd-ZVi9od-aZ2wEe-wOHMyf,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
+font[style*="background-color"],
+.goog-text-highlight {
+  background: none !important;
+  box-shadow: none !important;
+}
