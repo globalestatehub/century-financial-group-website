@@ -50,22 +50,24 @@ export default function MortgageReadinessPage() {
                 A clearer path to your next mortgage conversation.
               </h1>
               <p className="mt-7 max-w-2xl text-lg leading-8 text-moss">
-                Use this brief California Mortgage Readiness Assessment to name your goal, clarify the
-                question holding you back, and request an educational response from a licensed
-                professional.
+                Use this brief California Mortgage Readiness Assessment to name
+                your goal, clarify the question holding you back, and request an
+                educational response from a licensed professional.
               </p>
               <div className="mt-9 flex flex-wrap gap-4">
                 <a
                   href="#assessment"
                   className="inline-flex items-center gap-2 bg-forest px-6 py-4 text-sm font-bold tracking-[0.12em] text-white uppercase transition-colors hover:bg-forest-dark"
                 >
-                  Begin readiness assessment <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  Begin readiness assessment{" "}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </a>
                 <a
                   href="#why"
                   className="inline-flex items-center gap-2 border-b border-forest px-1 py-3 text-sm font-bold tracking-[0.12em] text-forest uppercase"
                 >
-                  How it works <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  How it works{" "}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               </div>
             </div>
@@ -73,15 +75,22 @@ export default function MortgageReadinessPage() {
               <p className="font-serif text-3xl leading-9 font-semibold text-forest-deep">
                 Education first. Clear options. A considered next step.
               </p>
-              <p className="mt-5 text-sm leading-7 text-moss">{siteConfig.licenseLine}</p>
+              <p className="mt-5 text-sm leading-7 text-moss">
+                {siteConfig.licenseLine}
+              </p>
             </div>
           </div>
         </section>
 
-        <section id="why" className="scroll-mt-8 border-b border-line bg-white px-5 py-16 sm:px-8 lg:px-12 lg:py-24">
+        <section
+          id="why"
+          className="scroll-mt-8 border-b border-line bg-white px-5 py-16 sm:px-8 lg:px-12 lg:py-24"
+        >
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-12">
             <div className="lg:col-span-4">
-              <p className="text-xs font-bold tracking-[0.18em] text-forest uppercase">Mortgage education</p>
+              <p className="text-xs font-bold tracking-[0.18em] text-forest uppercase">
+                Mortgage education
+              </p>
               <h2 className="mt-5 font-serif text-5xl leading-[0.95] font-semibold tracking-[-0.035em] text-forest-deep sm:text-6xl">
                 Bring a better question to the conversation.
               </h2>
@@ -89,10 +98,15 @@ export default function MortgageReadinessPage() {
             <div className="grid gap-7 sm:grid-cols-3 lg:col-span-8">
               {educationSteps.map(([number, title, copy]) => (
                 <article key={number} className="border-t border-sage pt-5">
-                  <p className="font-serif text-4xl font-semibold text-forest" aria-hidden="true">
+                  <p
+                    className="font-serif text-4xl font-semibold text-forest"
+                    aria-hidden="true"
+                  >
                     {number}
                   </p>
-                  <h3 className="mt-4 font-serif text-3xl leading-none font-bold text-forest-deep">{title}</h3>
+                  <h3 className="mt-4 font-serif text-3xl leading-none font-bold text-forest-deep">
+                    {title}
+                  </h3>
                   <p className="mt-4 leading-7 text-moss">{copy}</p>
                 </article>
               ))}
@@ -117,8 +131,8 @@ export default function MortgageReadinessPage() {
                 Start with the facts that are clear to you today.
               </h2>
               <p className="mt-6 max-w-md text-lg leading-8 text-moss">
-                This educational tool is not a loan application, prequalification, approval, or
-                commitment to lend.
+                This educational tool is not a loan application,
+                prequalification, approval, or commitment to lend.
               </p>
             </div>
             <div className="bg-white p-6 shadow-[0_18px_55px_rgba(14,80,48,0.10)] sm:p-10 lg:col-span-8">

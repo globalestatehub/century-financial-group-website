@@ -24,7 +24,9 @@ export function getDb(): MySql2Database | null {
 }
 
 /** Store a public partnership inquiry after validation has completed. */
-export async function createPartnershipInquiry(inquiry: InsertPartnershipInquiry) {
+export async function createPartnershipInquiry(
+  inquiry: InsertPartnershipInquiry
+) {
   const db = getDb();
   if (!db) throw new Error("The inquiry service is temporarily unavailable.");
   await db.insert(partnershipInquiries).values(inquiry);
@@ -38,7 +40,10 @@ export async function createMortgageLead(lead: InsertMortgageLead) {
 }
 
 /** Filtered lead records for the protected lead-management dashboard. */
-export async function listMortgageLeads(filters: MortgageLeadFilters, limit = 250) {
+export async function listMortgageLeads(
+  filters: MortgageLeadFilters,
+  limit = 250
+) {
   const db = getDb();
   if (!db) throw new Error("Mortgage lead storage is temporarily unavailable.");
 
@@ -56,13 +61,17 @@ export async function listMortgageLeads(filters: MortgageLeadFilters, limit = 25
     );
   }
   if (filters.preferredContact) {
-    conditions.push(eq(mortgageLeads.preferredContact, filters.preferredContact));
+    conditions.push(
+      eq(mortgageLeads.preferredContact, filters.preferredContact)
+    );
   }
   if (filters.assessmentGoal) {
     conditions.push(eq(mortgageLeads.assessmentGoal, filters.assessmentGoal));
   }
   if (filters.assessmentTimeline) {
-    conditions.push(eq(mortgageLeads.assessmentTimeline, filters.assessmentTimeline));
+    conditions.push(
+      eq(mortgageLeads.assessmentTimeline, filters.assessmentTimeline)
+    );
   }
 
   return db

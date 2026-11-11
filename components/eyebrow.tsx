@@ -1,7 +1,13 @@
 import { cn } from "@/lib/utils";
 
 /** Small uppercase section label with a leading rule (Covenant Ledger style). */
-export function Eyebrow({ children, className }: { children: React.ReactNode; className?: string }) {
+export function Eyebrow({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <div
       className={cn(

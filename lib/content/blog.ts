@@ -1,12 +1,11 @@
 export type BlogCategorySlug =
-  | "mortgage-education"
-  | "homeownership-preparation"
-  | "refinance-planning";
+  "mortgage-education" | "homeownership-preparation" | "refinance-planning";
 
 export type BlogPost = {
   slug: string;
   title: string;
-  category: "Mortgage Education" | "Homeownership Preparation" | "Refinance Planning";
+  category:
+    "Mortgage Education" | "Homeownership Preparation" | "Refinance Planning";
   categorySlug: BlogCategorySlug;
   date: string;
   isoDate: string;
@@ -37,7 +36,8 @@ export const blogPosts: readonly BlogPost[] = [
       "The California Mortgage Readiness Assessment is designed for that first step. It is educational only and is not a loan application, prequalification, approval, or commitment to lend.",
     ],
     image: "/images/hero-partnership.webp",
-    imageAlt: "A family speaking with a real estate professional at a home transaction",
+    imageAlt:
+      "A family speaking with a real estate professional at a home transaction",
   },
   {
     slug: "preparing-for-a-first-home-conversation",
@@ -85,24 +85,29 @@ export const blogCategories = [
   { label: "Refinance Planning", slug: "refinance-planning" },
 ] as const;
 
-export const blogArchives = [{ label: "September 2026", slug: "2026-09" }] as const;
+export const blogArchives = [
+  { label: "September 2026", slug: "2026-09" },
+] as const;
 
 export function getBlogPost(slug: string | undefined) {
-  return blogPosts.find((post) => post.slug === slug);
+  return blogPosts.find(post => post.slug === slug);
 }
 
 /** Post count per category, derived so the sidebar can never drift from the data. */
 export function countPostsInCategory(slug: string) {
-  return blogPosts.filter((post) => post.categorySlug === slug).length;
+  return blogPosts.filter(post => post.categorySlug === slug).length;
 }
 
 export function countPostsInArchive(slug: string) {
-  return blogPosts.filter((post) => post.archive === slug).length;
+  return blogPosts.filter(post => post.archive === slug).length;
 }
 
-export function filterBlogPosts(filters: { category?: string; archive?: string }) {
+export function filterBlogPosts(filters: {
+  category?: string;
+  archive?: string;
+}) {
   return blogPosts.filter(
-    (post) =>
+    post =>
       (!filters.category || post.categorySlug === filters.category) &&
       (!filters.archive || post.archive === filters.archive)
   );

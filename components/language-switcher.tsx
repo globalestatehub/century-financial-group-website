@@ -23,15 +23,20 @@ const serverLanguage = () => SOURCE_LANGUAGE;
 
 /** Header control that translates the whole page into the visitor's language. */
 export function LanguageSwitcher() {
-  const language = useSyncExternalStore(subscribe, readLanguage, serverLanguage);
+  const language = useSyncExternalStore(
+    subscribe,
+    readLanguage,
+    serverLanguage
+  );
 
   return (
     <div className="notranslate" translate="no">
       <Select
         value={language}
         items={translateLanguages}
-        onValueChange={(value) => {
-          if (value && value !== language) applyTranslateLanguage(value as TranslateLanguage);
+        onValueChange={value => {
+          if (value && value !== language)
+            applyTranslateLanguage(value as TranslateLanguage);
         }}
       >
         <SelectTrigger
@@ -43,9 +48,17 @@ export function LanguageSwitcher() {
             <SelectValue />
           </span>
         </SelectTrigger>
-        <SelectContent align="end" alignItemWithTrigger={false} className="min-w-44">
-          {translateLanguages.map((option) => (
-            <SelectItem key={option.value} value={option.value} lang={option.value}>
+        <SelectContent
+          align="end"
+          alignItemWithTrigger={false}
+          className="min-w-44"
+        >
+          {translateLanguages.map(option => (
+            <SelectItem
+              key={option.value}
+              value={option.value}
+              lang={option.value}
+            >
               {option.label}
             </SelectItem>
           ))}

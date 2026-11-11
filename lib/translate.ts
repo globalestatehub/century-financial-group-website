@@ -27,7 +27,7 @@ export const translateLanguages = [
 export type TranslateLanguage = (typeof translateLanguages)[number]["value"];
 
 const isSupported = (value: string): value is TranslateLanguage =>
-  translateLanguages.some((language) => language.value === value);
+  translateLanguages.some(language => language.value === value);
 
 /** Reads the target language from a cookie header string. */
 export function parseTranslateCookie(cookieString: string): TranslateLanguage {
@@ -40,7 +40,8 @@ export function parseTranslateCookie(cookieString: string): TranslateLanguage {
 /** Cookie domains Google may have written to: host-only, the host, and the registrable parent. */
 function cookieDomains(hostname: string) {
   const parts = hostname.split(".");
-  const parent = parts.length > 2 ? `.${parts.slice(-2).join(".")}` : `.${hostname}`;
+  const parent =
+    parts.length > 2 ? `.${parts.slice(-2).join(".")}` : `.${hostname}`;
   return [undefined, hostname, parent];
 }
 

@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { mortgageLeadsToCsv, mortgageLeadsToExcelHtml, type MortgageLeadExportRecord } from "@/lib/lead-export";
+import {
+  mortgageLeadsToCsv,
+  mortgageLeadsToExcelHtml,
+  type MortgageLeadExportRecord,
+} from "@/lib/lead-export";
 import {
   mortgageLeadSchema,
   parseLeadFilters,
@@ -33,9 +37,20 @@ describe("partnership inquiry validation", () => {
   });
 
   it("rejects a bad email, unknown role, and short message", () => {
-    expect(partnershipInquirySchema.safeParse({ ...validInquiry, email: "nope" }).success).toBe(false);
-    expect(partnershipInquirySchema.safeParse({ ...validInquiry, professionalRole: "x" }).success).toBe(false);
-    expect(partnershipInquirySchema.safeParse({ ...validInquiry, message: "hi" }).success).toBe(false);
+    expect(
+      partnershipInquirySchema.safeParse({ ...validInquiry, email: "nope" })
+        .success
+    ).toBe(false);
+    expect(
+      partnershipInquirySchema.safeParse({
+        ...validInquiry,
+        professionalRole: "x",
+      }).success
+    ).toBe(false);
+    expect(
+      partnershipInquirySchema.safeParse({ ...validInquiry, message: "hi" })
+        .success
+    ).toBe(false);
   });
 });
 
@@ -45,39 +60,77 @@ describe("mortgage lead validation", () => {
   });
 
   it("requires contact consent and the privacy acknowledgement", () => {
-    expect(mortgageLeadSchema.safeParse({ ...validLead, contactConsent: false }).success).toBe(false);
-    expect(mortgageLeadSchema.safeParse({ ...validLead, privacyAcknowledged: false }).success).toBe(false);
+    expect(
+      mortgageLeadSchema.safeParse({ ...validLead, contactConsent: false })
+        .success
+    ).toBe(false);
+    expect(
+      mortgageLeadSchema.safeParse({ ...validLead, privacyAcknowledged: false })
+        .success
+    ).toBe(false);
   });
 
   it("requires a phone number for phone contact or SMS opt-in", () => {
-    expect(mortgageLeadSchema.safeParse({ ...validLead, preferredContact: "phone" }).success).toBe(false);
-    expect(mortgageLeadSchema.safeParse({ ...validLead, smsConsent: true }).success).toBe(false);
     expect(
-      mortgageLeadSchema.safeParse({ ...validLead, preferredContact: "phone", phone: "714-555-0100" }).success
+      mortgageLeadSchema.safeParse({ ...validLead, preferredContact: "phone" })
+        .success
+    ).toBe(false);
+    expect(
+      mortgageLeadSchema.safeParse({ ...validLead, smsConsent: true }).success
+    ).toBe(false);
+    expect(
+      mortgageLeadSchema.safeParse({
+        ...validLead,
+        preferredContact: "phone",
+        phone: "714-555-0100",
+      }).success
     ).toBe(true);
   });
 
-  it("rejects submissions that fill the honeypot", () => {
-    expect(mortgageLeadSchema.safeParse({ ...validLead, website: "spam.example" }).success).toBe(false);
+  it("accepts a filled honeypot so bots are not tipped off (the action skips storing it)", () => {
+    const parsed = mortgageLeadSchema.safeParse({
+      ...validLead,
+      website: "spam.example",
+    });
+    expect(parsed.success).toBe(true);
+    expect(parsed.data?.website).toBe("spam.example");
+  });
+
+  it("requires a phone number for the partnership SMS opt-in", () => {
+    expect(
+      partnershipInquirySchema.safeParse({ ...validInquiry, smsConsent: true })
+        .success
+    ).toBe(false);
+    expect(
+      partnershipInquirySchema.safeParse({
+        ...validInquiry,
+        smsConsent: true,
+        phone: "714-555-0100",
+      }).success
+    ).toBe(true);
   });
 });
 
 describe("dashboard filters", () => {
   it("keeps valid filters and drops invalid ones", () => {
-    expect(parseLeadFilters({ preferredContact: "phone", search: " sam " })).toEqual({
+    expect(
+      parseLeadFilters({ preferredContact: "phone", search: " sam " })
+    ).toEqual({
       preferredContact: "phone",
       search: "sam",
       assessmentGoal: undefined,
       assessmentTimeline: undefined,
     });
-    expect(parseLeadFilters({ preferredContact: "fax", search: "" }).preferredContact).toBeUndefined();
+    expect(
+      parseLeadFilters({ preferredContact: "fax", search: "" }).preferredContact
+    ).toBeUndefined();
   });
 });
 
 describe("lead export", () => {
   const lead: MortgageLeadExportRecord = {
     firstName: 'Sam "The" Buyer',
-    lastName: "=HYPERLINK(\"x\")",
+    lastName: '=HYPERLINK("x")',
     email: "sam@example.com",
     phone: null,
     preferredContact: "email",
@@ -99,7 +152,9 @@ describe("lead export", () => {
   });
 
   it("escapes HTML in the Excel export", () => {
-    const html = mortgageLeadsToExcelHtml([{ ...lead, firstName: "<b>Sam</b>" }]);
+    const html = mortgageLeadsToExcelHtml([
+      { ...lead, firstName: "<b>Sam</b>" },
+    ]);
     expect(html).toContain("&lt;b&gt;Sam&lt;/b&gt;");
     expect(html).not.toContain("<b>Sam</b>");
   });

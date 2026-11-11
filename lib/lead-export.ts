@@ -13,19 +13,28 @@ export type MortgageLeadExportRecord = {
   createdAt: Date;
 };
 
-const columns: { label: string; value: (lead: MortgageLeadExportRecord) => string }[] = [
-  { label: "First name", value: (lead) => lead.firstName },
-  { label: "Last name", value: (lead) => lead.lastName },
-  { label: "Email", value: (lead) => lead.email },
-  { label: "Phone", value: (lead) => lead.phone || "" },
-  { label: "Preferred response", value: (lead) => lead.preferredContact },
-  { label: "Mortgage goal", value: (lead) => lead.assessmentGoal || "" },
-  { label: "Primary concern", value: (lead) => lead.assessmentConcern || "" },
-  { label: "Timeline", value: (lead) => lead.assessmentTimeline || "" },
-  { label: "Contact consent", value: (lead) => String(lead.contactConsent) },
-  { label: "SMS consent", value: (lead) => String(lead.smsConsent) },
-  { label: "Privacy acknowledged", value: (lead) => String(lead.privacyAcknowledged) },
-  { label: "Submitted at", value: (lead) => new Date(lead.createdAt).toISOString() },
+const columns: {
+  label: string;
+  value: (lead: MortgageLeadExportRecord) => string;
+}[] = [
+  { label: "First name", value: lead => lead.firstName },
+  { label: "Last name", value: lead => lead.lastName },
+  { label: "Email", value: lead => lead.email },
+  { label: "Phone", value: lead => lead.phone || "" },
+  { label: "Preferred response", value: lead => lead.preferredContact },
+  { label: "Mortgage goal", value: lead => lead.assessmentGoal || "" },
+  { label: "Primary concern", value: lead => lead.assessmentConcern || "" },
+  { label: "Timeline", value: lead => lead.assessmentTimeline || "" },
+  { label: "Contact consent", value: lead => String(lead.contactConsent) },
+  { label: "SMS consent", value: lead => String(lead.smsConsent) },
+  {
+    label: "Privacy acknowledged",
+    value: lead => String(lead.privacyAcknowledged),
+  },
+  {
+    label: "Submitted at",
+    value: lead => new Date(lead.createdAt).toISOString(),
+  },
 ];
 
 /**
@@ -39,8 +48,10 @@ const csvEscape = (raw: string) => {
 
 export function mortgageLeadsToCsv(leads: MortgageLeadExportRecord[]) {
   return [
-    columns.map((column) => csvEscape(column.label)).join(","),
-    ...leads.map((lead) => columns.map((column) => csvEscape(column.value(lead))).join(",")),
+    columns.map(column => csvEscape(column.label)).join(","),
+    ...leads.map(lead =>
+      columns.map(column => csvEscape(column.value(lead))).join(",")
+    ),
   ].join("\n");
 }
 
@@ -52,11 +63,11 @@ export function mortgageLeadsToExcelHtml(leads: MortgageLeadExportRecord[]) {
       .replaceAll(">", "&gt;")
       .replaceAll('"', "&quot;");
   return `<!doctype html><html><head><meta charset="UTF-8"></head><body><table><thead><tr>${columns
-    .map((column) => `<th>${escapeHtml(column.label)}</th>`)
+    .map(column => `<th>${escapeHtml(column.label)}</th>`)
     .join("")}</tr></thead><tbody>${leads
     .map(
-      (lead) =>
-        `<tr>${columns.map((column) => `<td>${escapeHtml(column.value(lead))}</td>`).join("")}</tr>`
+      lead =>
+        `<tr>${columns.map(column => `<td>${escapeHtml(column.value(lead))}</td>`).join("")}</tr>`
     )
     .join("")}</tbody></table></body></html>`;
 }

@@ -1,8 +1,14 @@
 "use client";
 
 import Script from "next/script";
-import { useSyncExternalStore } from "react";
-import { parseTranslateCookie, SOURCE_LANGUAGE } from "@/lib/translate";
+import { X } from "lucide-react";
+import { useState, useSyncExternalStore } from "react";
+import { translationNotice } from "@/lib/compliance";
+import {
+  applyTranslateLanguage,
+  parseTranslateCookie,
+  SOURCE_LANGUAGE,
+} from "@/lib/translate";
 
 declare global {
   interface Window {
@@ -39,7 +45,11 @@ function guardDomMutations() {
   };
 
   const originalInsertBefore = proto.insertBefore;
-  proto.insertBefore = function <T extends Node>(this: Node, node: T, reference: Node | null): T {
+  proto.insertBefore = function <T extends Node>(
+    this: Node,
+    node: T,
+    reference: Node | null
+  ): T {
     if (reference && reference.parentNode !== this) return node;
     return originalInsertBefore.call(this, node, reference) as T;
   };
@@ -50,12 +60,21 @@ function guardDomMutations() {
  * English, so English visitors never download the third-party script.
  */
 export function GoogleTranslateLoader() {
-  const language = useSyncExternalStore(subscribe, readLanguage, serverLanguage);
+  const language = useSyncExternalStore(
+    subscribe,
+    readLanguage,
+    serverLanguage
+  );
   if (language === SOURCE_LANGUAGE) return null;
 
   return (
     <>
-      <div id="google_translate_element" className="hidden" aria-hidden="true" />
+      <TranslationNotice />
+      <div
+        id="google_translate_element"
+        className="hidden"
+        aria-hidden="true"
+      />
       <Script id="google-translate-init" strategy="afterInteractive">
         {`window.googleTranslateElementInit = function () {
   new window.google.translate.TranslateElement({ pageLanguage: "${SOURCE_LANGUAGE}", autoDisplay: false }, "google_translate_element");
@@ -67,5 +86,35 @@ export function GoogleTranslateLoader() {
         onReady={guardDomMutations}
       />
     </>
+  );
+}
+
+/** Machine-translation disclaimer, shown while a translated page is displayed. */
+function TranslationNotice() {
+  const [dismissed, setDismissed] = useState(false);
+  if (dismissed) return null;
+  return (
+    <div
+      role="note"
+      className="fixed bottom-4 left-4 z-40 max-w-[calc(100%-2rem)] border-l-4 border-gold bg-white p-4 pr-10 text-sm leading-6 text-forest-deep shadow-[0_12px_40px_rgba(14,80,48,0.18)] sm:max-w-sm"
+    >
+      <p>{translationNotice}</p>
+      <button
+        type="button"
+        onClick={() => applyTranslateLanguage(SOURCE_LANGUAGE)}
+        className="notranslate mt-2 font-bold text-forest underline underline-offset-4"
+        translate="no"
+      >
+        View in English
+      </button>
+      <button
+        type="button"
+        onClick={() => setDismissed(true)}
+        aria-label="Dismiss translation notice"
+        className="absolute top-2 right-2 inline-flex h-8 w-8 items-center justify-center text-moss hover:text-forest-deep"
+      >
+        <X className="h-4 w-4" aria-hidden="true" />
+      </button>
+    </div>
   );
 }

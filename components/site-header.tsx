@@ -17,7 +17,6 @@ export function SiteHeader() {
         <Link
           href="/"
           className="grid min-w-0 gap-0.5"
-          aria-label={`${siteConfig.name} home`}
           translate="no"
         >
           <span className="notranslate truncate font-serif text-[1.3rem] leading-none font-bold tracking-[-0.03em] text-forest-deep sm:text-[1.55rem]">
@@ -32,8 +31,12 @@ export function SiteHeader() {
           className="hidden items-center gap-5 text-[0.72rem] font-bold tracking-[0.06em] text-[#284333] uppercase xl:flex"
           aria-label="Primary navigation"
         >
-          {publicNavigation.map((item) => (
-            <Link key={item.label} href={item.href} className="transition-colors hover:text-forest">
+          {publicNavigation.map(item => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="transition-colors hover:text-forest"
+            >
               {item.label}
             </Link>
           ))}
@@ -62,10 +65,14 @@ export function SiteHeader() {
             aria-label={mobileOpen ? "Close navigation" : "Open navigation"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
-            onClick={() => setMobileOpen((open) => !open)}
+            onClick={() => setMobileOpen(open => !open)}
             className="inline-flex h-10 w-10 items-center justify-center border border-sage text-forest-deep xl:hidden"
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? (
+              <X className="h-5 w-5" />
+            ) : (
+              <Menu className="h-5 w-5" />
+            )}
           </button>
         </div>
       </div>
@@ -77,7 +84,7 @@ export function SiteHeader() {
           aria-label="Mobile navigation"
         >
           <div className="mx-auto grid max-w-[1440px] gap-1">
-            {publicNavigation.map((item) => (
+            {publicNavigation.map(item => (
               <Link
                 key={item.label}
                 href={item.href}

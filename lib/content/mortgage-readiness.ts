@@ -3,11 +3,21 @@
 export const assessmentSteps = [
   {
     question: "What would you like to accomplish?",
-    answers: ["Buy my first home", "Refinance", "Use home equity", "Invest in property"],
+    answers: [
+      "Buy my first home",
+      "Refinance",
+      "Use home equity",
+      "Invest in property",
+    ],
   },
   {
     question: "Which part feels least clear?",
-    answers: ["My credit score", "The down payment", "The paperwork", "Finding the right lender"],
+    answers: [
+      "My credit score",
+      "The down payment",
+      "The paperwork",
+      "Finding the right lender",
+    ],
   },
   {
     question: "What is your timeline?",

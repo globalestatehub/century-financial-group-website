@@ -9,12 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { disclaimerText } from "@/lib/compliance";
 
 const STORAGE_KEY = "cfg-disclaimer-acknowledged-v1";
 export const OPEN_DISCLAIMER_EVENT = "cfg:open-disclaimer";
-
-export const disclaimerText =
-  "Some photos or visual materials may be AI-enhanced to help you visualise possibilities. These are illustrative only and not intended to deceive. All figures, timelines, and projections are illustrative and unverified; market and regulatory factors may change outcomes. Please verify key facts independently — including any size or record discrepancies — and consult licensed professionals before making any decisions.";
 
 function hasAcknowledged() {
   try {
@@ -60,7 +58,7 @@ export function DisclaimerModal() {
   return (
     <Dialog
       open={open}
-      onOpenChange={(next) => {
+      onOpenChange={next => {
         if (!next) rememberAcknowledgement();
         setOpen(next);
       }}

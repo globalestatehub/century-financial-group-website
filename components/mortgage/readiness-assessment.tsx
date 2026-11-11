@@ -1,8 +1,25 @@
 "use client";
 
-import { ArrowRight, CheckCircle2, ChevronLeft, Loader2, RotateCcw, ShieldCheck } from "lucide-react";
-import { type ChangeEvent, type FormEvent, useId, useState, useTransition } from "react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  ChevronLeft,
+  Loader2,
+  RotateCcw,
+  ShieldCheck,
+} from "lucide-react";
+import { type ChangeEvent, type FormEvent, useId, useState } from "react";
 import { captureMortgageLead } from "@/app/actions";
+import {
+  FieldError,
+  FormSuccess,
+  HoneypotField,
+  PrivacyLink,
+} from "@/components/forms/form-parts";
+import { TurnstileWidget } from "@/components/forms/turnstile-widget";
+import { useProtectedSubmit } from "@/components/forms/use-protected-submit";
+import { TURNSTILE_ACTIONS } from "@/lib/forms/turnstile";
+import { mortgageLeadSchema } from "@/lib/validation";
 import {
   assessmentSteps,
   getReadinessGuidance,
@@ -40,9 +57,11 @@ type FieldChange = ChangeEvent<HTMLInputElement | HTMLSelectElement>;
 export function ReadinessAssessment() {
   const [answers, setAnswers] = useState<string[]>([]);
   const [leadForm, setLeadForm] = useState<LeadFormState>(initialLeadForm);
-  const [formError, setFormError] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [isPending, startTransition] = useTransition();
+  const form = useProtectedSubmit<Record<string, unknown>>({
+    schema: mortgageLeadSchema,
+    action: captureMortgageLead,
+  });
+  const submitted = form.status.kind === "success";
 
   const currentStep = answers.length;
   const complete = currentStep === assessmentSteps.length;
@@ -52,34 +71,27 @@ export function ReadinessAssessment() {
   const updateForm = (event: FieldChange) => {
     const target = event.target;
     const value =
-      target instanceof HTMLInputElement && target.type === "checkbox" ? target.checked : target.value;
-    setLeadForm((current) => ({ ...current, [target.name]: value }));
+      target instanceof HTMLInputElement && target.type === "checkbox"
+        ? target.checked
+        : target.value;
+    setLeadForm(current => ({ ...current, [target.name]: value }));
+    form.clearFieldError(target.name);
   };
 
   const submitLead = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    setFormError("");
-    if (!leadForm.contactConsent || !leadForm.privacyAcknowledged) {
-      setFormError("Please confirm consent and acknowledge the privacy notice before submitting.");
-      return;
-    }
-    startTransition(async () => {
-      const result = await captureMortgageLead({
-        ...leadForm,
-        assessmentGoal: answers[0],
-        assessmentConcern: answers[1],
-        assessmentTimeline: answers[2],
-      });
-      if (result.ok) setSubmitted(true);
-      else setFormError(result.message);
+    form.submit({
+      ...leadForm,
+      assessmentGoal: answers[0],
+      assessmentConcern: answers[1],
+      assessmentTimeline: answers[2],
     });
   };
 
   const restart = () => {
     setAnswers([]);
     setLeadForm(initialLeadForm);
-    setSubmitted(false);
-    setFormError("");
+    form.reset();
   };
 
   if (!complete) {
@@ -101,20 +113,24 @@ export function ReadinessAssessment() {
           >
             <div
               className="h-full bg-forest transition-[width] duration-200"
-              style={{ width: `${((currentStep + 1) / assessmentSteps.length) * 100}%` }}
+              style={{
+                width: `${((currentStep + 1) / assessmentSteps.length) * 100}%`,
+              }}
             />
           </div>
         </div>
         <p className="mt-10 text-xs font-bold tracking-[0.14em] text-forest uppercase">
           Question {String(currentStep + 1).padStart(2, "0")}
         </p>
-        <h3 className="mt-3 font-serif text-4xl leading-none font-bold text-forest-deep">{step.question}</h3>
+        <h3 className="mt-3 font-serif text-4xl leading-none font-bold text-forest-deep">
+          {step.question}
+        </h3>
         <div className="mt-8 grid gap-3">
-          {step.answers.map((answer) => (
+          {step.answers.map(answer => (
             <button
               key={answer}
               type="button"
-              onClick={() => setAnswers((current) => [...current, answer])}
+              onClick={() => setAnswers(current => [...current, answer])}
               className="flex items-center justify-between border border-sage px-5 py-4 text-left font-semibold text-forest-deep transition-colors hover:border-forest hover:bg-mint focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-forest"
             >
               <span>{answer}</span>
@@ -125,10 +141,11 @@ export function ReadinessAssessment() {
         {currentStep > 0 && (
           <button
             type="button"
-            onClick={() => setAnswers((current) => current.slice(0, -1))}
+            onClick={() => setAnswers(current => current.slice(0, -1))}
             className="mt-6 inline-flex items-center gap-1 text-sm font-semibold text-forest underline"
           >
-            <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Change my previous answer
+            <ChevronLeft className="h-4 w-4" aria-hidden="true" /> Change my
+            previous answer
           </button>
         )}
       </div>
@@ -139,19 +156,26 @@ export function ReadinessAssessment() {
     return (
       <div className="max-w-2xl" role="status">
         <CheckCircle2 className="h-9 w-9 text-forest" aria-hidden="true" />
-        <p className="mt-6 text-xs font-bold tracking-[0.14em] text-forest uppercase">Request received</p>
+        <p className="mt-6 text-xs font-bold tracking-[0.14em] text-forest uppercase">
+          Request received
+        </p>
         <h3 className="mt-3 font-serif text-4xl leading-none font-bold text-forest-deep">
-          Thank you. A California-licensed team member can respond by your selected method.
+          A California-licensed team member can respond by your selected method.
         </h3>
+        <div className="mt-6">
+          <FormSuccess />
+        </div>
         <p className="mt-6 text-lg leading-8 text-moss">
-          Your request is not a loan application, prequalification, approval, or commitment to lend.
+          Your request is not a loan application, prequalification, approval, or
+          commitment to lend.
         </p>
         <button
           type="button"
           onClick={restart}
           className="mt-8 inline-flex items-center gap-2 border border-forest px-5 py-3 text-sm font-bold tracking-[0.12em] text-forest uppercase hover:bg-mint"
         >
-          <RotateCcw className="h-4 w-4" aria-hidden="true" /> Start a new assessment
+          <RotateCcw className="h-4 w-4" aria-hidden="true" /> Start a new
+          assessment
         </button>
       </div>
     );
@@ -162,15 +186,24 @@ export function ReadinessAssessment() {
       <p className="text-xs font-bold tracking-[0.14em] text-forest uppercase">
         Your educational readiness profile
       </p>
-      <h3 className="mt-3 font-serif text-5xl leading-none font-bold text-forest-deep">{profile}</h3>
+      <h3 className="mt-3 font-serif text-5xl leading-none font-bold text-forest-deep">
+        {profile}
+      </h3>
       <p className="mt-6 text-lg leading-8 text-moss">
-        Based on your responses, begin by clarifying <strong>{answers[1]?.toLowerCase()}</strong> before
-        trying to solve every variable at once.
+        Based on your responses, begin by clarifying{" "}
+        <strong>{answers[1]?.toLowerCase()}</strong> before trying to solve
+        every variable at once.
       </p>
       <ol className="mt-8 grid gap-4 border-y border-line py-7">
         {guidance.map((item, index) => (
-          <li key={item} className="grid grid-cols-[32px_1fr] gap-3 leading-7 text-moss">
-            <span className="font-serif text-2xl font-bold text-forest" aria-hidden="true">
+          <li
+            key={item}
+            className="grid grid-cols-[32px_1fr] gap-3 leading-7 text-moss"
+          >
+            <span
+              className="font-serif text-2xl font-bold text-forest"
+              aria-hidden="true"
+            >
               {index + 1}
             </span>
             <span>{item}</span>
@@ -181,20 +214,61 @@ export function ReadinessAssessment() {
       <form id="contact" onSubmit={submitLead} className="mt-10" noValidate>
         <div className="border-l-2 border-forest bg-mist p-5">
           <div className="flex gap-3">
-            <ShieldCheck className="mt-1 h-5 w-5 shrink-0 text-forest" aria-hidden="true" />
+            <ShieldCheck
+              className="mt-1 h-5 w-5 shrink-0 text-forest"
+              aria-hidden="true"
+            />
             <div>
-              <p className="font-semibold text-forest-deep">{siteConfig.legalName}</p>
+              <p className="font-semibold text-forest-deep">
+                {siteConfig.legalName}
+              </p>
               <p className="mt-1 text-sm leading-6 text-moss">
-                Licensed California Real Estate Broker · {siteConfig.licenseLine}
+                Licensed California Real Estate Broker ·{" "}
+                {siteConfig.licenseLine}
               </p>
             </div>
           </div>
         </div>
         <div className="mt-7 grid gap-5 sm:grid-cols-2">
-          <InputField label="First name" name="firstName" value={leadForm.firstName} onChange={updateForm} required autoComplete="given-name" />
-          <InputField label="Last name" name="lastName" value={leadForm.lastName} onChange={updateForm} required autoComplete="family-name" />
-          <InputField label="Email address" name="email" value={leadForm.email} onChange={updateForm} required type="email" autoComplete="email" className="sm:col-span-2" />
-          <InputField label="Phone" name="phone" value={leadForm.phone} onChange={updateForm} type="tel" autoComplete="tel" optional />
+          <InputField
+            label="First name"
+            name="firstName"
+            error={form.errors.firstName}
+            value={leadForm.firstName}
+            onChange={updateForm}
+            required
+            autoComplete="given-name"
+          />
+          <InputField
+            label="Last name"
+            name="lastName"
+            error={form.errors.lastName}
+            value={leadForm.lastName}
+            onChange={updateForm}
+            required
+            autoComplete="family-name"
+          />
+          <InputField
+            label="Email address"
+            name="email"
+            error={form.errors.email}
+            value={leadForm.email}
+            onChange={updateForm}
+            required
+            type="email"
+            autoComplete="email"
+            className="sm:col-span-2"
+          />
+          <InputField
+            label="Phone"
+            name="phone"
+            error={form.errors.phone}
+            value={leadForm.phone}
+            onChange={updateForm}
+            type="tel"
+            autoComplete="tel"
+            optional
+          />
           <label className="grid gap-2">
             <span className="text-xs font-bold tracking-[0.12em] text-forest-deep uppercase">
               Preferred response{" "}
@@ -212,65 +286,96 @@ export function ReadinessAssessment() {
               <option value="phone">Phone</option>
             </select>
           </label>
-          {/* Honeypot: hidden from people and assistive tech, catches simple bots. */}
-          <div className="sr-only" aria-hidden="true">
-            <label>
-              Leave this blank
-              <input name="website" value={leadForm.website} onChange={updateForm} tabIndex={-1} autoComplete="off" />
-            </label>
-          </div>
+          <HoneypotField value={leadForm.website} onChange={updateForm} />
         </div>
         <div className="mt-7 grid gap-4 text-sm leading-6 text-moss">
-          <ConsentField name="contactConsent" checked={leadForm.contactConsent} onChange={updateForm} required>
-            I agree that {siteConfig.legalName} may contact me by my selected method to respond to this
-            request. I understand this is not a loan application, prequalification, or commitment to
-            lend.
+          <ConsentField
+            name="contactConsent"
+            checked={leadForm.contactConsent}
+            onChange={updateForm}
+            required
+            error={form.errors.contactConsent}
+          >
+            I agree that {siteConfig.legalName} may contact me by my selected
+            method to respond to this request. I understand this is not a loan
+            application, prequalification, or commitment to lend.
           </ConsentField>
-          <ConsentField name="smsConsent" checked={leadForm.smsConsent} onChange={updateForm}>
-            I agree to receive text messages at the mobile number provided about this request. Consent is
-            not a condition of service. Message and data rates may apply. Reply STOP to opt out.
+          <ConsentField
+            name="smsConsent"
+            checked={leadForm.smsConsent}
+            onChange={updateForm}
+          >
+            I agree to receive text messages at the mobile number provided about
+            this request. Consent is not a condition of service. Message and
+            data rates may apply. Reply STOP to opt out.
           </ConsentField>
-          <ConsentField name="privacyAcknowledged" checked={leadForm.privacyAcknowledged} onChange={updateForm} required>
-            I have read the privacy notice at collection below.
+          <ConsentField
+            name="privacyAcknowledged"
+            checked={leadForm.privacyAcknowledged}
+            onChange={updateForm}
+            required
+            error={form.errors.privacyAcknowledged}
+          >
+            I have read the privacy notice at collection below and the{" "}
+            <PrivacyLink className="text-forest" />.
           </ConsentField>
         </div>
         <details className="mt-6 border border-line bg-mist p-4">
           <summary className="flex cursor-pointer items-center gap-2 font-semibold text-forest-deep">
-            <ShieldCheck className="h-4 w-4 text-forest" aria-hidden="true" /> Privacy notice at collection
+            <ShieldCheck className="h-4 w-4 text-forest" aria-hidden="true" />{" "}
+            Privacy notice at collection
           </summary>
           <p className="mt-3 text-sm leading-6 text-moss">
-            {siteConfig.legalName} collects your name, contact details, selected contact preference,
-            and readiness answers to respond to your request, tailor educational follow-up, and maintain
-            consent records. This form does not request Social Security numbers, financial-account
-            numbers, or loan-application documents. Connect this notice to the company-approved privacy
-            policy and request channel before publication.
+            {siteConfig.legalName} collects your name, contact details, selected
+            contact preference, and readiness answers to respond to your
+            request, tailor educational follow-up, and maintain consent records.
+            This form does not request Social Security numbers,
+            financial-account numbers, or loan-application documents. We do not
+            sell your personal information. Read the full{" "}
+            <PrivacyLink className="text-forest" /> for your California privacy
+            rights and how to make a request.
           </p>
         </details>
-        {formError && (
+        <div className="mt-6">
+          <TurnstileWidget
+            action={TURNSTILE_ACTIONS.mortgageReadiness}
+            onToken={form.setToken}
+            handleRef={form.bindTurnstile}
+          />
+        </div>
+        {form.status.kind === "error" && (
           <p className="mt-5 font-semibold text-red-700" role="alert">
-            {formError}
+            {form.status.message}
           </p>
         )}
         <div className="mt-7 flex flex-col gap-5 border-t border-line pt-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-moss">
-            <ShieldCheck className="h-4 w-4 shrink-0 text-forest" aria-hidden="true" /> Secure request
-            intake · {siteConfig.address.display} ·{" "}
-            <a href={siteConfig.phoneHref} className="font-bold text-forest hover:underline">
+            <ShieldCheck
+              className="h-4 w-4 shrink-0 text-forest"
+              aria-hidden="true"
+            />{" "}
+            Secure request intake · {siteConfig.address.display} ·{" "}
+            <a
+              href={siteConfig.phoneHref}
+              className="font-bold text-forest hover:underline"
+            >
               {siteConfig.phoneDisplay}
             </a>
           </p>
           <button
             type="submit"
-            disabled={isPending}
+            disabled={form.isPending}
             className="inline-flex items-center justify-center gap-2 bg-forest px-5 py-3 text-sm font-bold tracking-[0.12em] text-white uppercase transition-colors hover:bg-forest-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isPending ? (
+            {form.isPending ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> Saving request
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />{" "}
+                Saving request
               </>
             ) : (
               <>
-                Request my next steps <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Request my next steps{" "}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </>
             )}
           </button>
@@ -290,9 +395,11 @@ function InputField({
   optional,
   autoComplete,
   className = "",
+  error,
 }: {
   label: string;
   name: keyof LeadFormState;
+  error?: string;
   value: string;
   onChange: (event: FieldChange) => void;
   type?: "text" | "email" | "tel";
@@ -310,7 +417,9 @@ function InputField({
             *
           </em>
         ) : optional ? (
-          <small className="tracking-normal text-[#5B6A60] normal-case">Optional</small>
+          <small className="tracking-normal text-[#5B6A60] normal-case">
+            Optional
+          </small>
         ) : null}
       </span>
       <input
@@ -321,8 +430,11 @@ function InputField({
         required={required}
         aria-required={required}
         autoComplete={autoComplete}
-        className="border border-sage bg-white px-3 py-3 text-forest-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `lead-${name}-error` : undefined}
+        className={`border bg-white px-3 py-3 text-forest-deep focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${error ? "border-red-700" : "border-sage"}`}
       />
+      <FieldError id={`lead-${name}-error`} message={error} className="mt-0" />
     </label>
   );
 }
@@ -332,9 +444,11 @@ function ConsentField({
   checked,
   onChange,
   required,
+  error,
   children,
 }: {
   name: keyof LeadFormState;
+  error?: string;
   checked: boolean;
   onChange: (event: FieldChange) => void;
   required?: boolean;
@@ -351,16 +465,21 @@ function ConsentField({
         onChange={onChange}
         required={required}
         aria-required={required}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
         className="mt-1 h-4 w-4 accent-forest"
       />
-      <label htmlFor={id}>
-        {children}
-        {required && (
-          <em className="ml-1 text-forest not-italic" aria-hidden="true">
-            *
-          </em>
-        )}
-      </label>
+      <div>
+        <label htmlFor={id}>
+          {children}
+          {required && (
+            <em className="ml-1 text-forest not-italic" aria-hidden="true">
+              *
+            </em>
+          )}
+        </label>
+        <FieldError id={`${id}-error`} message={error} className="mt-1" />
+      </div>
     </div>
   );
 }

@@ -8,53 +8,66 @@ export const contentType = "image/png";
 /** Default social share card for every route that doesn't define its own. */
 export default function OpengraphImage() {
   return new ImageResponse(
-    (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "72px 80px",
+        background: "#ffffff",
+        borderTop: "18px solid #c9a84c",
+        fontFamily: "serif",
+      }}
+    >
       <div
         style={{
-          width: "100%",
-          height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-          padding: "72px 80px",
-          background: "#ffffff",
-          borderTop: "18px solid #c9a84c",
-          fontFamily: "serif",
+          fontSize: 22,
+          letterSpacing: 5,
+          textTransform: "uppercase",
+          color: "#0E5030",
+          fontFamily: "sans-serif",
+          fontWeight: 700,
         }}
       >
+        Dedicated to Mortgage Excellence
+      </div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
         <div
           style={{
             display: "flex",
-            fontSize: 22,
-            letterSpacing: 5,
-            textTransform: "uppercase",
-            color: "#0E5030",
-            fontFamily: "sans-serif",
+            fontSize: 92,
+            lineHeight: 1,
+            color: "#173424",
             fontWeight: 700,
           }}
         >
-          Dedicated to Mortgage Excellence
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
-          <div style={{ display: "flex", fontSize: 92, lineHeight: 1, color: "#173424", fontWeight: 700 }}>
-            Century Financial Group
-          </div>
-          <div style={{ display: "flex", marginTop: 28, fontSize: 34, color: "#40574A" }}>
-            Mortgage readiness &amp; a purpose-led partnership
-          </div>
+          Century Financial Group
         </div>
         <div
           style={{
             display: "flex",
-            fontSize: 24,
+            marginTop: 28,
+            fontSize: 34,
             color: "#40574A",
-            fontFamily: "sans-serif",
           }}
         >
-          {siteConfig.licenseLine}
+          Mortgage readiness &amp; a purpose-led partnership
         </div>
       </div>
-    ),
+      <div
+        style={{
+          display: "flex",
+          fontSize: 24,
+          color: "#40574A",
+          fontFamily: "sans-serif",
+        }}
+      >
+        {siteConfig.licenseLine}
+      </div>
+    </div>,
     size
   );
 }

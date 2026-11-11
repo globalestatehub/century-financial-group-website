@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Source_Sans_3 } from "next/font/google";
 import { DisclaimerModal } from "@/components/disclaimer-modal";
 import { GoogleTranslateLoader } from "@/components/google-translate-loader";
-import { Toaster } from "@/components/ui/sonner";
 import { defaultOgImage, siteConfig } from "@/lib/site";
 import "./globals.css";
 
@@ -46,7 +45,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${cormorant.variable} ${sourceSans.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${cormorant.variable} ${sourceSans.variable} antialiased`}
+    >
       <body className="min-h-screen">
         <a
           href="#main-content"
@@ -56,7 +58,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         {children}
         <DisclaimerModal />
-        <Toaster position="top-center" />
         <GoogleTranslateLoader />
       </body>
     </html>

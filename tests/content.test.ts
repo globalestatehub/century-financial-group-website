@@ -7,7 +7,10 @@ import {
   filterBlogPosts,
   getBlogPost,
 } from "@/lib/content/blog";
-import { getReadinessGuidance, getReadinessProfile } from "@/lib/content/mortgage-readiness";
+import {
+  getReadinessGuidance,
+  getReadinessProfile,
+} from "@/lib/content/mortgage-readiness";
 import { partnershipFaqs } from "@/lib/content/partnership";
 import { publicNavigation, siteConfig } from "@/lib/site";
 import { parseTranslateCookie } from "@/lib/translate";
@@ -19,7 +22,7 @@ describe("site details", () => {
   });
 
   it("routes Blog to the internal archive and keeps the CenturyFG menu order", () => {
-    expect(publicNavigation.map((item) => item.label)).toEqual([
+    expect(publicNavigation.map(item => item.label)).toEqual([
       "Purchase",
       "Refinance",
       "Loan Options",
@@ -27,20 +30,23 @@ describe("site details", () => {
       "Contact Us",
       "Blog",
     ]);
-    expect(publicNavigation.find((item) => item.label === "Blog")?.href).toBe("/blog");
+    expect(publicNavigation.find(item => item.label === "Blog")?.href).toBe(
+      "/blog"
+    );
   });
 });
 
 describe("blog content", () => {
   it("has unique slugs that resolve to their post", () => {
-    const slugs = blogPosts.map((post) => post.slug);
+    const slugs = blogPosts.map(post => post.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
     for (const slug of slugs) expect(getBlogPost(slug)?.slug).toBe(slug);
     expect(getBlogPost("missing")).toBeUndefined();
   });
 
   it("derives category and archive counts from the posts", () => {
-    for (const category of blogCategories) expect(countPostsInCategory(category.slug)).toBe(1);
+    for (const category of blogCategories)
+      expect(countPostsInCategory(category.slug)).toBe(1);
     expect(countPostsInArchive("2026-09")).toBe(3);
   });
 
@@ -55,15 +61,20 @@ describe("blog content", () => {
 describe("partnership FAQ", () => {
   it("has eight answered questions", () => {
     expect(partnershipFaqs).toHaveLength(8);
-    for (const item of partnershipFaqs) expect(item.answer.length).toBeGreaterThan(40);
+    for (const item of partnershipFaqs)
+      expect(item.answer.length).toBeGreaterThan(40);
   });
 });
 
 describe("mortgage readiness guidance", () => {
   it("maps goals to profiles", () => {
-    expect(getReadinessProfile("Buy my first home")).toBe("The Cautious California Buyer");
+    expect(getReadinessProfile("Buy my first home")).toBe(
+      "The Cautious California Buyer"
+    );
     expect(getReadinessProfile("Refinance")).toBe("The Savvy Refinancer");
-    expect(getReadinessProfile("Invest in property")).toBe("The Prepared Explorer");
+    expect(getReadinessProfile("Invest in property")).toBe(
+      "The Prepared Explorer"
+    );
   });
 
   it("always returns three steps ending with the licensed follow-up", () => {

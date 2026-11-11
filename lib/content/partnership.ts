@@ -5,21 +5,21 @@ export const partnershipModels = [
     number: "01",
     title: "Commission-Tithe Partnership",
     description:
-      "Pledge a fixed 10–25% of commission to LIMinistries, with a transparent client-choice ministry menu.",
-    note: "Marketing kits and impact calculators included.",
+      "Consider pledging a fixed share of commission (for example, 10–25%) to LIMinistries, with a transparent client-choice ministry menu.",
+    note: "Marketing kits and impact calculators may be available.",
   },
   {
     number: "02",
     title: "Client-Choice Donation Program",
     description:
-      "Reduce commission by up to 50% and invite the client to donate the saved portion at closing.",
-    note: "Escrow-ready language and a Ministry Impact Agreement are provided.",
+      "Where permitted, reduce commission (in some examples by up to 50%) and invite the client to consider donating the saved portion at closing.",
+    note: "Sample escrow language and a Ministry Impact Agreement template can be shared for review by your advisors.",
   },
   {
     number: "03",
     title: "Niche Cause-Based Teams",
     description:
-      "Serve groups such as healthcare workers, families in recovery, caregivers, and seniors while funding related prayer and wellness resources.",
+      "Serve groups such as healthcare workers, families in recovery, caregivers, and seniors while supporting related prayer and wellness resources.",
     note: "Examples: Homes for Healers and Second-Chance Housing.",
   },
   {
@@ -33,8 +33,8 @@ export const partnershipModels = [
     number: "05",
     title: "Referral Network Integration",
     description:
-      "Feature LIMinistries in an existing giving menu and report the ministry outcomes funded after every gift.",
-    note: "A clear, visible pathway for ongoing partnership.",
+      "Feature LIMinistries in an existing giving menu and share reports on the ministry outcomes gifts help support.",
+    note: "A visible pathway for ongoing partnership.",
   },
 ] as const;
 
@@ -45,13 +45,13 @@ export const successStories = [
     name: "Give Realty",
     location: "Austin, Texas",
     proof:
-      "25% of commissions donated to client-chosen nonprofits; over $1 million directed to charitable causes.",
+      "Reports donating 25% of commissions to client-chosen nonprofits, with more than $1 million directed to charitable causes.",
   },
   {
     name: "Christian West Howard",
     location: "Florida · The Heart That Gives",
     proof:
-      "A 50% commission-giving model where the gift is made in the client’s name, supporting trust and referrals.",
+      "Describes a 50% commission-giving model where the gift is made in the client’s name, which is said to support trust and referrals.",
   },
   {
     name: "Gerald Leonard",
@@ -63,7 +63,7 @@ export const successStories = [
     name: "Blessings of Home Team",
     location: "Faith-Based Brand Model",
     proof:
-      "Publicly connecting home transactions with giving to ministries and faith-based charities through a “home with a purpose” story.",
+      "Describes connecting home transactions with giving to ministries and faith-based charities through a “home with a purpose” story.",
   },
 ] as const;
 
@@ -78,19 +78,19 @@ export const nextSteps = [
     step: "02",
     title: "Customized Proposal",
     description:
-      "A specific agreement covering donation percentage, marketing plan, impact measures, and compliance considerations.",
+      "A proposed agreement that may cover donation percentage, marketing plan, impact measures, and compliance considerations.",
   },
   {
     step: "03",
     title: "Launch Support",
     description:
-      "Training, materials, marketing tools, and spiritual encouragement for a confident rollout.",
+      "Training, materials, marketing tools, and spiritual encouragement to help with your rollout.",
   },
   {
     step: "04",
     title: "Ongoing Partnership",
     description:
-      "Quarterly reviews, impact reporting, and continuous partnership stewardship.",
+      "Periodic reviews, impact reporting, and ongoing partnership stewardship.",
   },
 ] as const;
 
@@ -100,12 +100,12 @@ export const partnershipFaqs = [
     question:
       "What is the simplest way for an individual realtor or loan officer to begin?",
     answer:
-      "Begin with a Pilot Partnership: commit 10–15% of commissions from the next five transactions. LIMinistries provides marketing materials, impact tracking, and client-communication templates so you can test the model with clarity.",
+      "Begin with a Pilot Partnership: commit 10–15% of commissions from the next five transactions. LIMinistries can provide marketing materials, impact tracking, and client-communication templates to help you test the model.",
   },
   {
     question: "Can loan officers participate, or is this only for realtors?",
     answer:
-      "Loan officers can participate. The partnership conversation will identify an approach that aligns with your lender’s policies, compensation practices, and compliance requirements while connecting your work to measurable ministry impact.",
+      "Loan officers can participate. The partnership conversation can help identify an approach that aligns with your lender’s policies, compensation practices, and compliance requirements while connecting your work to ministry impact.",
   },
   {
     question: "How are charitable gifts structured?",
@@ -113,9 +113,10 @@ export const partnershipFaqs = [
       "Partnerships should use clear written agreements, direct charitable gifts, and transparent statements about the giving percentage. Each participant should consult the appropriate brokerage, lender, escrow, legal, and tax advisors before putting a structure into practice.",
   },
   {
-    question: "Can clients choose the ministry work their transaction supports?",
+    question:
+      "Can clients choose the ministry work their transaction supports?",
     answer:
-      "Yes. A client-choice menu can be included in a Commission-Tithe Partnership so clients see how their transaction connects to specific ministry outcomes. The exact process is defined in the customized partnership agreement and related communication materials.",
+      "In many cases, yes. A client-choice menu can be included in a Commission-Tithe Partnership so clients see how their transaction connects to specific ministry outcomes. The exact process is defined in the customized partnership agreement and related communication materials.",
   },
   {
     question:
@@ -126,7 +127,7 @@ export const partnershipFaqs = [
   {
     question: "What happens after I submit an inquiry?",
     answer:
-      "The process begins with a 30-minute discovery call to understand your goals, client base, and preferred partnership model. LIMinistries then prepares a customized proposal, provides launch support, and establishes an approach for ongoing stewardship reviews.",
+      "The process begins with a 30-minute discovery call to understand your goals, client base, and preferred partnership model. LIMinistries may then prepare a customized proposal, offer launch support, and agree with you on an approach for ongoing stewardship reviews.",
   },
   {
     question: "How will I know what my partnership has accomplished?",

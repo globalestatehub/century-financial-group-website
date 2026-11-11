@@ -43,23 +43,41 @@ export default function BlogPage({ searchParams }: PageProps<"/blog">) {
   );
 }
 
-async function FilteredBlogArchive({ searchParams }: { searchParams: PageProps<"/blog">["searchParams"] }) {
+async function FilteredBlogArchive({
+  searchParams,
+}: {
+  searchParams: PageProps<"/blog">["searchParams"];
+}) {
   const params = await searchParams;
-  const single = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
-  return <BlogArchive filters={{ category: single(params.category), archive: single(params.archive) }} />;
+  const single = (value: string | string[] | undefined) =>
+    Array.isArray(value) ? value[0] : value;
+  return (
+    <BlogArchive
+      filters={{
+        category: single(params.category),
+        archive: single(params.archive),
+      }}
+    />
+  );
 }
 
 function BlogArchive({ filters }: { filters: Filters }) {
   const visiblePosts = filterBlogPosts(filters);
-  const categoryLabel = blogCategories.find((item) => item.slug === filters.category)?.label;
-  const archiveLabel = blogArchives.find((item) => item.slug === filters.archive)?.label;
+  const categoryLabel = blogCategories.find(
+    item => item.slug === filters.category
+  )?.label;
+  const archiveLabel = blogArchives.find(
+    item => item.slug === filters.archive
+  )?.label;
   const heading = categoryLabel || archiveLabel || "Blog";
 
   return (
     <>
       <section className="border-b border-[#e6eae6] bg-[#f6f8f6] px-5 py-5 sm:px-8 lg:px-12">
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-4">
-          <h1 className="text-sm font-bold tracking-[0.08em] text-[#263e2f] uppercase">{heading}</h1>
+          <h1 className="text-sm font-bold tracking-[0.08em] text-[#263e2f] uppercase">
+            {heading}
+          </h1>
           <nav aria-label="Breadcrumb" className="text-sm text-[#6b746d]">
             <ol className="flex flex-wrap items-center gap-1">
               <li>
@@ -69,7 +87,11 @@ function BlogArchive({ filters }: { filters: Filters }) {
               </li>
               <li aria-hidden="true">›</li>
               <li>
-                <Link href="/blog" className="transition-colors hover:text-forest" aria-current={heading === "Blog" ? "page" : undefined}>
+                <Link
+                  href="/blog"
+                  className="transition-colors hover:text-forest"
+                  aria-current={heading === "Blog" ? "page" : undefined}
+                >
                   Blog
                 </Link>
               </li>
@@ -104,12 +126,22 @@ function BlogArchive({ filters }: { filters: Filters }) {
                 </div>
                 <div>
                   <h2 className="font-serif text-4xl leading-[1.02] font-bold text-forest-ink sm:text-[2.7rem]">
-                    <Link href={`/blog/${post.slug}`} className="hover:text-forest">
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="hover:text-forest"
+                    >
                       {post.title}
                     </Link>
                   </h2>
-                  <PostMeta date={post.date} isoDate={post.isoDate} author={post.author} category={post.category} />
-                  <p className="mt-5 max-w-[620px] text-base leading-7 text-[#5a645c]">{post.excerpt}</p>
+                  <PostMeta
+                    date={post.date}
+                    isoDate={post.isoDate}
+                    author={post.author}
+                    category={post.category}
+                  />
+                  <p className="mt-5 max-w-[620px] text-base leading-7 text-[#5a645c]">
+                    {post.excerpt}
+                  </p>
                   <Link
                     href={`/blog/${post.slug}`}
                     className="mt-6 inline-flex items-center gap-2 bg-forest px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-forest-dark"
@@ -123,7 +155,10 @@ function BlogArchive({ filters }: { filters: Filters }) {
             {visiblePosts.length === 0 && (
               <p className="py-10 text-lg leading-8 text-[#5a645c]">
                 No posts match this selection.{" "}
-                <Link href="/blog" className="font-bold text-forest hover:underline">
+                <Link
+                  href="/blog"
+                  className="font-bold text-forest hover:underline"
+                >
                   View all posts
                 </Link>
                 .
@@ -134,7 +169,7 @@ function BlogArchive({ filters }: { filters: Filters }) {
           <aside className="border-t border-[#edf0ed] pt-8 lg:border-t-0 lg:border-l lg:pt-0 lg:pl-10">
             <SidebarList
               title="Categories"
-              items={blogCategories.map((item) => ({
+              items={blogCategories.map(item => ({
                 label: `${item.label} (${countPostsInCategory(item.slug)})`,
                 href: `/blog?category=${item.slug}`,
               }))}
@@ -142,13 +177,15 @@ function BlogArchive({ filters }: { filters: Filters }) {
             <SidebarList
               title="Archives"
               className="mt-12"
-              items={blogArchives.map((item) => ({
+              items={blogArchives.map(item => ({
                 label: `${item.label} (${countPostsInArchive(item.slug)})`,
                 href: `/blog?archive=${item.slug}`,
               }))}
             />
             <div className="mt-12 border-l-2 border-forest bg-[#f6f8f6] p-5">
-              <p className="text-xs font-bold tracking-[0.14em] text-forest uppercase">Start here</p>
+              <p className="text-xs font-bold tracking-[0.14em] text-forest uppercase">
+                Start here
+              </p>
               <p className="mt-3 font-serif text-2xl leading-7 font-bold text-forest-ink">
                 A clearer mortgage conversation begins with the right questions.
               </p>
@@ -156,7 +193,8 @@ function BlogArchive({ filters }: { filters: Filters }) {
                 href="/mortgage-readiness#assessment"
                 className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest hover:underline"
               >
-                Explore readiness <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                Explore readiness{" "}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
               </Link>
             </div>
           </aside>
@@ -182,9 +220,12 @@ function SidebarList({
         {title}
       </h2>
       <ul className="mt-5 space-y-3">
-        {items.map((item) => (
+        {items.map(item => (
           <li key={item.href}>
-            <Link href={item.href} className="text-sm text-[#5a645c] transition-colors hover:text-forest">
+            <Link
+              href={item.href}
+              className="text-sm text-[#5a645c] transition-colors hover:text-forest"
+            >
               {item.label}
             </Link>
           </li>

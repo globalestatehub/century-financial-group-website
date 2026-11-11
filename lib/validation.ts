@@ -1,31 +1,53 @@
 import { z } from "zod";
 
-/** Public fields accepted from real estate and lending professionals. */
-export const partnershipInquirySchema = z.object({
-  fullName: z.string().trim().min(2, "Please enter your full name.").max(160),
-  email: z.string().trim().email("Please enter a valid email address.").max(320),
-  phone: z.string().trim().max(64).optional(),
-  professionalRole: z.enum(["realtor", "loan_officer", "both", "other"]),
-  company: z
-    .string()
-    .trim()
-    .min(2, "Please enter your brokerage, lender, or company.")
-    .max(200),
-  licenseNumber: z.string().trim().max(64).optional(),
-  serviceAreas: z.string().trim().max(500).optional(),
-  partnershipInterest: z
-    .string()
-    .trim()
-    .min(2, "Please select a partnership interest.")
-    .max(120),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Please share a little about your inquiry.")
-    .max(5000),
-});
+/**
+ * Honeypot. Real visitors never see or fill it. Bots that do are not told they
+ * were caught: the value is forwarded to n8n as-is and nothing is stored.
+ */
+const honeypot = z.string().max(500).optional();
 
-export type PartnershipInquiryInput = z.infer<typeof partnershipInquirySchema>;
+/** Public fields accepted from real estate and lending professionals. */
+export const partnershipInquirySchema = z
+  .object({
+    fullName: z.string().trim().min(2, "Please enter your full name.").max(160),
+    email: z
+      .string()
+      .trim()
+      .email("Please enter a valid email address.")
+      .max(320),
+    phone: z.string().trim().max(64).optional(),
+    professionalRole: z.enum(["realtor", "loan_officer", "both", "other"]),
+    company: z
+      .string()
+      .trim()
+      .min(2, "Please enter your brokerage, lender, or company.")
+      .max(200),
+    licenseNumber: z.string().trim().max(64).optional(),
+    serviceAreas: z.string().trim().max(500).optional(),
+    partnershipInterest: z
+      .string()
+      .trim()
+      .min(2, "Please select a partnership interest.")
+      .max(120),
+    message: z
+      .string()
+      .trim()
+      .min(10, "Please share a little about your inquiry.")
+      .max(5000),
+    smsConsent: z.boolean().default(false),
+    website: honeypot,
+  })
+  .superRefine((inquiry, ctx) => {
+    if (inquiry.smsConsent && !inquiry.phone) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["phone"],
+        message: "Add a mobile number to opt in to text messages.",
+      });
+    }
+  });
+
+export type PartnershipInquiryInput = z.input<typeof partnershipInquirySchema>;
 
 const optionalPhone = z.string().trim().max(32).optional().or(z.literal(""));
 
@@ -50,8 +72,7 @@ export const mortgageLeadSchema = z
     privacyAcknowledged: z.literal(true, {
       error: "Please acknowledge the privacy notice.",
     }),
-    /** Honeypot: real visitors never fill this hidden field. */
-    website: z.string().max(0).optional(),
+    website: honeypot,
   })
   .superRefine((lead, ctx) => {
     if (lead.preferredContact === "phone" && !lead.phone) {
@@ -101,9 +122,23 @@ export function parseLeadFilters(
 
 export type ActionResult =
   | { ok: true }
-  | { ok: false; message: string };
+  | { ok: false; message: string; fieldErrors?: Record<string, string> };
 
 /** First readable validation message, used for form-level error text. */
 export function firstIssueMessage(error: z.ZodError) {
   return error.issues[0]?.message ?? "Please review the form and try again.";
 }
+
+/** Field name → first message, for inline errors linked with aria-describedby. */
+export function fieldErrors(error: z.ZodError): Record<string, string> {
+  const errors: Record<string, string> = {};
+  for (const issue of error.issues) {
+    const key = String(issue.path[0] ?? "form");
+    errors[key] ??= issue.message;
+  }
+  return errors;
+}
+
+/** Shown after any successful form submission. */
+export const FORM_SUCCESS_MESSAGE =
+  "Thank you! We received your request. Please allow 1–2 working days for us to get back to you.";
