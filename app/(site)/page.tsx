@@ -650,7 +650,8 @@ export default function HomePage() {
                   {siteConfig.dreLicense}
                 </p>
                 <p>
-                  <strong className="text-ink">Status:</strong> Licensed
+                  <strong className="text-ink">Status:</strong>{" "}
+                  {siteConfig.dreStatus}
                 </p>
                 <p>
                   <strong className="text-ink">Expiration:</strong>{" "}
@@ -659,6 +660,13 @@ export default function HomePage() {
                 <p>
                   <strong className="text-ink">MLO License Endorsement:</strong>{" "}
                   {siteConfig.mloEndorsement}
+                </p>
+                <p>
+                  <strong className="text-ink">Designated Officer:</strong>{" "}
+                  <span className="notranslate" translate="no">
+                    {siteConfig.designatedOfficer.name}
+                  </span>{" "}
+                  (DRE #{siteConfig.designatedOfficer.dreLicense})
                 </p>
                 <p className="mt-4">{siteConfig.address.display}</p>
                 <p>

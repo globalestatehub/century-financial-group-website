@@ -25,7 +25,12 @@ function ComplianceStrip({ linkHover }: { linkHover: string }) {
             </strong>{" "}
             · Responsible broker · CA DRE Corporation License #
             {siteConfig.dreLicense} · MLO License Endorsement #
-            {siteConfig.mloEndorsement} · {siteConfig.address.display}.{" "}
+            {siteConfig.mloEndorsement} · Designated Officer{" "}
+            <span className="notranslate" translate="no">
+              {siteConfig.designatedOfficer.name}
+            </span>
+            , DRE #{siteConfig.designatedOfficer.dreLicense} ·{" "}
+            {siteConfig.address.display}.{" "}
             <span className="font-semibold text-white/80">
               Equal Housing Opportunity.
             </span>{" "}

@@ -1,9 +1,10 @@
 /** Regulatory text and links shared by the footers and the Disclosures page. */
 
-export const LEGAL_LAST_UPDATED = "November 11, 2026";
+export const LEGAL_LAST_UPDATED = "November 13, 2026";
 
 export const complianceLinks = {
-  dreLicenseLookup: "https://www2.dre.ca.gov/PublicASP/pplinfo.asp",
+  dreLicenseLookup:
+    "https://www2.dre.ca.gov/publicasp/pplinfo.asp?License_id=01930905",
   nmlsConsumerAccess: "https://www.nmlsconsumeraccess.org/",
   agencyDisclosureStatute:
     "https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=2079.16",

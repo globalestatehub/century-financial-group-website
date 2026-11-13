@@ -17,9 +17,22 @@ export const siteConfig = {
     country: "US",
     display: "8295 Bolsa Avenue, Midway City, CA 92655",
   },
+  /** Verified against the CA DRE public license record on November 13, 2026. */
   dreLicense: "01930905",
+  dreStatus: "Licensed",
+  dreIssued: "April 17, 2013",
   dreExpiration: "April 16, 2029",
   mloEndorsement: "1974007",
+  designatedOfficer: {
+    name: "Paul Dang Nguyen",
+    dreLicense: "01714869",
+    expiration: "April 16, 2029",
+  },
+  dbas: [
+    "Century Funding",
+    "Century Real Estate",
+    "City Escrow, a non-independent broker escrow",
+  ],
   licenseLine: "CA DRE #01930905 · MLO License Endorsement #1974007",
   applyOnlineHref: "https://www.centuryfg.com/apply-online/",
   quoteHref: "/mortgage-readiness#assessment",

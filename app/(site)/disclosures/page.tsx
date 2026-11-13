@@ -47,11 +47,26 @@ export default function DisclosuresPage() {
           <ul className="!mt-3 !list-none !pl-0">
             <li>
               <strong>DRE Corporation License:</strong> #{siteConfig.dreLicense}{" "}
-              (licensed; expires {siteConfig.dreExpiration})
+              ({siteConfig.dreStatus.toLowerCase()}; issued{" "}
+              {siteConfig.dreIssued}; expires {siteConfig.dreExpiration})
             </li>
             <li>
               <strong>MLO License Endorsement:</strong> #
               {siteConfig.mloEndorsement}
+            </li>
+            <li>
+              <strong>Designated Officer:</strong>{" "}
+              <span className="notranslate" translate="no">
+                {siteConfig.designatedOfficer.name}
+              </span>
+              , DRE #{siteConfig.designatedOfficer.dreLicense} (expires{" "}
+              {siteConfig.designatedOfficer.expiration})
+            </li>
+            <li>
+              <strong>Doing business as:</strong>{" "}
+              <span className="notranslate" translate="no">
+                {siteConfig.dbas.join("; ")}
+              </span>
             </li>
             <li>{siteConfig.address.display}</li>
             <li>
